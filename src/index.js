@@ -1,6 +1,7 @@
 import ConversionUtility from './conversionUtility';
 import DomHelper from './domHelper';
 import WeatherFetcher from './weatherFetcher';
+import WeatherIcons from './weatherIcons';
 
 const body = document.querySelector('body');
 
@@ -17,21 +18,25 @@ async function doSearch(e) {
   e.preventDefault();
 
   const wData = await WeatherFetcher.getWeather(input.value);
-
-  console.log(wData);
-  console.log('KELVIN');
-  console.log(wData.currentTemp);
-
   wData._temperatureMode = ConversionUtility.temperatureModes.celsius;
-  console.dir('CELSIUS');
-  console.log(wData.currentTemp);
 
-  wData._temperatureMode = ConversionUtility.temperatureModes.fahrenheit;
-console.dir('FAHRENHEIT');
-console.log(wData.currentTemp);
+  const currentTempDiv = DomHelper.createElement('div');
+  currentTempDiv.innerText = `Current Temp: ${wData.currentTemp}`;
+  body.appendChild(currentTempDiv);
 
+  const heroIcon = WeatherIcons.getWeatherHeroIcon(ConversionUtility.convertWeatherIdToHeroIcon(wData.weatherId));
+  const heroImg = DomHelper.createElement('img');
+  heroImg.src = heroIcon;
+  heroImg.style.width = "64px";
+  heroImg.style.height = "64px";
+  body.appendChild(heroImg);
+
+  const simpleIcon = WeatherIcons.getWeatherSimpleIcon(ConversionUtility.convertWeatherIdToSimpleIcon(wData.weatherId));
+  const simpleImg = DomHelper.createElement('img');
+  simpleImg.src = simpleIcon;
+  simpleImg.style.width = "48px";
+  simpleImg.style.height = "48px";
+  body.appendChild(simpleImg);
 }
 
 form.addEventListener('submit', doSearch);
-
-
