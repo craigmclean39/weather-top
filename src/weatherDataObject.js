@@ -1,3 +1,5 @@
+import ConversionUtility from './conversionUtility';
+
 export default class WeatherDataObject {
   constructor() {
     this._currentTemp = undefined;
@@ -18,13 +20,15 @@ export default class WeatherDataObject {
     this._hourlyTemps = [];
     this._hourlyWeatherIds = [];
 
-    this._temperatureModes = ['kelvin', 'celsius', 'fahrenheit']
-
-    this._temperatureMode = this._temperatureModes[0];
+    this._temperatureMode = ConversionUtility.temperatureModes.kelvin;
   }
 
   get currentTemp() {
-    return this._currentTemp;
+    return ConversionUtility.convertTemperature(
+      this._currentTemp,
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 
   set currentTemp(value) {
@@ -40,7 +44,11 @@ export default class WeatherDataObject {
   }
 
   get minTemp() {
-    return this._minTemp;
+    return ConversionUtility.convertTemperature(
+      this._minTemp,
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 
   set minTemp(value) {
@@ -48,7 +56,11 @@ export default class WeatherDataObject {
   }
 
   get maxTemp() {
-    return this._maxTemp;
+    return ConversionUtility.convertTemperature(
+      this._maxTemp,
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 
   set maxTemp(value) {
@@ -100,7 +112,11 @@ export default class WeatherDataObject {
   }
 
   getDayTemps(dayIndex) {
-    return this._dayTemps[dayIndex];
+    return ConversionUtility.convertTemperature(
+      this._dayTemps[dayIndex],
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 
   setDayMinTemps(arrValue) {
@@ -108,7 +124,11 @@ export default class WeatherDataObject {
   }
 
   getDayMinTemps(dayIndex) {
-    return this._dayMinTemps[dayIndex];
+    return ConversionUtility.convertTemperature(
+      this._dayMinTemps[dayIndex],
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 
   setDayMaxTemps(arrValue) {
@@ -116,7 +136,11 @@ export default class WeatherDataObject {
   }
 
   getDayMaxTemps(dayIndex) {
-    return this._dayMaxTemps[dayIndex];
+    return ConversionUtility.convertTemperature(
+      this._dayMaxTemps[dayIndex],
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 
   setDayWeatherIds(arrValue) {
@@ -140,6 +164,10 @@ export default class WeatherDataObject {
   }
 
   getHourlyTemps(hourIndex) {
-    return this._hourlyTemps[hourIndex];
+    return ConversionUtility.convertTemperature(
+      this._hourlyTemps[hourIndex],
+      this._temperatureMode,
+      ConversionUtility.temperatureModes.kelvin
+    );
   }
 }
