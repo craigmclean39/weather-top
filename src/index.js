@@ -16,6 +16,7 @@ async function doSearch(e) {
   e.preventDefault();
 
   const wData = await WeatherFetcher.getWeather(input.value);
+  
 
   console.log(wData);
 }
