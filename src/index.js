@@ -20,22 +20,26 @@ async function doSearch(e) {
   const wData = await WeatherFetcher.getWeather(input.value);
   wData._temperatureMode = ConversionUtility.temperatureModes.celsius;
 
+  const nameDiv = DomHelper.createElement('div');
+  nameDiv.innerText = `${wData.cityName}, ${wData.countryName}`;
+  body.appendChild(nameDiv);
+
   const currentTempDiv = DomHelper.createElement('div');
   currentTempDiv.innerText = `Current Temp: ${wData.currentTemp}`;
   body.appendChild(currentTempDiv);
 
-  const heroIcon = WeatherIcons.getWeatherHeroIcon(ConversionUtility.convertWeatherIdToHeroIcon(wData.weatherId));
+  const heroIcon = WeatherIcons.getWeatherHeroIcon(wData.weatherId);
   const heroImg = DomHelper.createElement('img');
   heroImg.src = heroIcon;
-  heroImg.style.width = "64px";
-  heroImg.style.height = "64px";
+  heroImg.style.width = '64px';
+  heroImg.style.height = '64px';
   body.appendChild(heroImg);
 
-  const simpleIcon = WeatherIcons.getWeatherSimpleIcon(ConversionUtility.convertWeatherIdToSimpleIcon(wData.weatherId));
+  const simpleIcon = WeatherIcons.getWeatherSimpleIcon(wData.weatherId);
   const simpleImg = DomHelper.createElement('img');
   simpleImg.src = simpleIcon;
-  simpleImg.style.width = "48px";
-  simpleImg.style.height = "48px";
+  simpleImg.style.width = '48px';
+  simpleImg.style.height = '48px';
   body.appendChild(simpleImg);
 }
 

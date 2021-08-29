@@ -3,40 +3,56 @@ import WeatherDataObject from './weatherDataObject';
 export default class WeatherFetcher {
   static apiKey = '97e0d1ebd3976ff95f7e0702e7105810';
 
-  static async queryWeather(city) {
-    try {
-      const fetchUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WeatherFetcher.apiKey}`;
-      const response = await fetch(fetchUrl, { mode: 'cors' });
-      const data = await response.json();
-
-      const { lon } = data.coord;
-      const { lat } = data.coord;
-
-      const exclude = 'minutely';
-
-      const oneCallUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${exclude}&appid=${WeatherFetcher.apiKey}`;
-      const oneCallResponse = await fetch(oneCallUrl, { mode: 'cors' });
-      const oneCallData = await oneCallResponse.json();
-
-      return oneCallData;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
-
   static async getWeather(city) {
     const cityWeatherData = await this.queryWeather(city);
     console.log(cityWeatherData);
 
     const wdo =
       WeatherFetcher.translateFromJSONtoWeatherDataObject(cityWeatherData);
+    console.log(wdo);
     return wdo;
+  }
+
+  static async queryWeather(city) {
+    try {
+      // Grab the weather from the API with a city name
+      const fetchUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WeatherFetcher.apiKey}`;
+      const response = await fetch(fetchUrl, { mode: 'cors' });
+      const data = await response.json();
+
+      console.log(data);
+
+      const cityName = data.name;
+      const countryName = data.sys.country;
+
+      console.log(`${cityName} ${countryName}`);
+
+      // Grab the lat and long
+      const { lon } = data.coord;
+      const { lat } = data.coord;
+
+      const exclude = 'minutely';
+
+      // Use the lat and lon to get the more detailed weather
+      const oneCallUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${exclude}&appid=${WeatherFetcher.apiKey}`;
+      const oneCallResponse = await fetch(oneCallUrl, { mode: 'cors' });
+      const oneCallData = await oneCallResponse.json();
+      oneCallData.cityName = cityName;
+      oneCallData.countryName = countryName;
+
+      return oneCallData;
+    } catch (error) {
+      console.log('AN ERROR!');
+      console.dir(error);
+      return error;
+    }
   }
 
   static translateFromJSONtoWeatherDataObject(cityWeatherDataJSON) {
     const wdo = new WeatherDataObject();
 
+    wdo.cityName = cityWeatherDataJSON.cityName;
+    wdo.countryName = cityWeatherDataJSON.countryName;
     wdo.currentTemp = cityWeatherDataJSON.current.temp;
     wdo.currentPop = cityWeatherDataJSON.daily[0].pop;
     wdo.minTemp = cityWeatherDataJSON.daily[0].temp.min;

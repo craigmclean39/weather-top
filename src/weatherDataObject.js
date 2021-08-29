@@ -2,6 +2,10 @@ import ConversionUtility from './conversionUtility';
 
 export default class WeatherDataObject {
   constructor() {
+
+    this._cityName = undefined;
+    this._countryName = undefined;
+
     this._currentTemp = undefined;
     this._minTemp = undefined;
     this._maxTemp = undefined;
@@ -21,6 +25,22 @@ export default class WeatherDataObject {
     this._hourlyWeatherIds = [];
 
     this._temperatureMode = ConversionUtility.temperatureModes.kelvin;
+  }
+
+  get countryName() {
+    return this._countryName;
+  }
+
+  set countryName(value) {
+    this._countryName = value;
+  }
+
+  get cityName() {
+    return this._cityName;
+  }
+
+  set cityName(value) {
+    this._cityName = value;
   }
 
   get currentTemp() {
