@@ -23,7 +23,7 @@ export default class WeatherFetcher {
       const data = await response.json();
 
       // 200 - Good Data
-      if (data.cod === '200') {
+      if (data.cod === 200) {
         const cityName = data.name;
         const countryName = data.sys.country;
 
