@@ -2,7 +2,6 @@ import ConversionUtility from './conversionUtility';
 
 export default class WeatherDataObject {
   constructor() {
-
     this._cityName = undefined;
     this._countryName = undefined;
 
@@ -25,6 +24,14 @@ export default class WeatherDataObject {
     this._hourlyWeatherIds = [];
 
     this._temperatureMode = ConversionUtility.temperatureModes.kelvin;
+  }
+
+  get temperatureMode() {
+    return this._temperatureMode;
+  }
+
+  set temperatureMode(value) {
+    this._temperatureMode = value;
   }
 
   get countryName() {

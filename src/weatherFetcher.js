@@ -4,13 +4,15 @@ export default class WeatherFetcher {
   static apiKey = '97e0d1ebd3976ff95f7e0702e7105810';
 
   static async getWeather(city) {
-    const cityWeatherData = await this.queryWeather(city);
-    console.log(cityWeatherData);
+    try {
+      const cityWeatherData = await this.queryWeather(city);
 
-    const wdo =
-      WeatherFetcher.translateFromJSONtoWeatherDataObject(cityWeatherData);
-    console.log(wdo);
-    return wdo;
+      const wdo =
+        WeatherFetcher.translateFromJSONtoWeatherDataObject(cityWeatherData);
+      return wdo;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   static async queryWeather(city) {
@@ -20,31 +22,28 @@ export default class WeatherFetcher {
       const response = await fetch(fetchUrl, { mode: 'cors' });
       const data = await response.json();
 
-      console.log(data);
+      // 200 - Good Data
+      if (data.cod === '200') {
+        const cityName = data.name;
+        const countryName = data.sys.country;
 
-      const cityName = data.name;
-      const countryName = data.sys.country;
+        // Grab the lat and long
+        const { lon } = data.coord;
+        const { lat } = data.coord;
 
-      console.log(`${cityName} ${countryName}`);
+        const exclude = 'minutely';
 
-      // Grab the lat and long
-      const { lon } = data.coord;
-      const { lat } = data.coord;
-
-      const exclude = 'minutely';
-
-      // Use the lat and lon to get the more detailed weather
-      const oneCallUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${exclude}&appid=${WeatherFetcher.apiKey}`;
-      const oneCallResponse = await fetch(oneCallUrl, { mode: 'cors' });
-      const oneCallData = await oneCallResponse.json();
-      oneCallData.cityName = cityName;
-      oneCallData.countryName = countryName;
-
-      return oneCallData;
+        // Use the lat and lon to get the more detailed weather
+        const oneCallUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${exclude}&appid=${WeatherFetcher.apiKey}`;
+        const oneCallResponse = await fetch(oneCallUrl, { mode: 'cors' });
+        const oneCallData = await oneCallResponse.json();
+        oneCallData.cityName = cityName;
+        oneCallData.countryName = countryName;
+        return oneCallData;
+      }
+      throw new Error('Bad Data');
     } catch (error) {
-      console.log('AN ERROR!');
-      console.dir(error);
-      return error;
+      throw new Error(error);
     }
   }
 
