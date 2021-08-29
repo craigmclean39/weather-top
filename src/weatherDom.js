@@ -1,4 +1,5 @@
 import format from 'date-fns/format';
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import WeatherDataObject from './weatherDataObject';
 import WeatherIcons from './weatherIcons';
 import DomHelper from './domHelper';
@@ -34,13 +35,6 @@ export default class WeatherDom {
       'basic-weather-card__maxTemp'
     );
 
-    const pop = DomHelper.createElement('div', 'basic-weather-card__pop');
-    const sunrise = DomHelper.createElement(
-      'div',
-      'basic-weather-card__sunrise'
-    );
-    const sunset = DomHelper.createElement('div', 'basic-weather-card__sunset');
-
     // Grab the current date and format it in this style '4th Aug, 2021 | Wednesday'
     const currentDate = Date.now();
     const dateString1 = format(currentDate, 'do LLL');
@@ -71,28 +65,88 @@ export default class WeatherDom {
 
     mainWeather.innerText = wdo.weatherMain;
 
-    pop.innerText = `${wdo.currentPop}% chance of rain`;
+    card.appendChild(date);
+    card.appendChild(location);
+
+    const heroFlex = DomHelper.createElement(
+      'div',
+      'basic-weather-card__hero-flex'
+    );
+    heroFlex.appendChild(heroIcon);
+    heroFlex.appendChild(currentTemp);
+    heroFlex.appendChild(mainWeather);
+
+    card.appendChild(heroFlex);
+    card.appendChild(minTemp);
+    card.appendChild(maxTemp);
+
+    return card;
+  }
+
+  static createAdditionalInfoCard(wdo) {
+    const card = DomHelper.createElement('div', 'additional-info-card');
+
+    const pop = DomHelper.createElement('div', 'additional-info-card__pop');
+    const sunrise = DomHelper.createElement(
+      'div',
+      'additional-info-card__sunrise'
+    );
+    const sunset = DomHelper.createElement(
+      'div',
+      'additional-info-card__sunset'
+    );
+
+    const popIcon = DomHelper.createElement(
+      'img',
+      'additional-info-card__pop__icon'
+    );
+    const popText = DomHelper.createElement(
+      'div',
+      'additional-info-card__pop__text'
+    );
+    popIcon.src = WeatherIcons.getPopIcon();
+    popText.innerText = `${wdo.currentPop}%`;
+
+    pop.appendChild(popIcon);
+    pop.appendChild(popText);
 
     // convert the unix timestamp to a date
     let sunriseTime = new Date(wdo.sunriseTime * 1000);
     let sunsetTime = new Date(wdo.sunsetTime * 1000);
+
+    sunriseTime = utcToZonedTime(sunriseTime, wdo.timezone);
+    sunsetTime = utcToZonedTime(sunsetTime, wdo.timezone);
+
     sunriseTime = format(sunriseTime, 'p');
     sunsetTime = format(sunsetTime, 'p');
 
-    sunrise.innerText = `Sunrise: ${sunriseTime}`;
-    sunset.innerText = `Sunset: ${sunsetTime}`;
+    const sunriseIcon = DomHelper.createElement(
+      'img',
+      'additional-info-card__sunrise__icon'
+    );
+    const sunriseText = DomHelper.createElement(
+      'div',
+      'additional-info-card__sunrise__text'
+    );
+    sunriseIcon.src = WeatherIcons.getSunriseIcon();
+    sunriseText.innerText = `${sunriseTime}`;
 
-    card.appendChild(date);
-    card.appendChild(location);
+    const sunsetIcon = DomHelper.createElement(
+      'img',
+      'additional-info-card__sunset__icon'
+    );
+    const sunsetText = DomHelper.createElement(
+      'div',
+      'additional-info-card__sunset__text'
+    );
+    sunsetIcon.src = WeatherIcons.getSunsetIcon();
+    sunsetText.innerText = `${sunsetTime}`;
 
-    const heroFlex = DomHelper.createElement('div', 'basic-weather-card__hero-flex');
-    heroFlex.appendChild(heroIcon);
-    heroFlex.appendChild(currentTemp);
-    heroFlex.appendChild(mainWeather);
-    
-    card.appendChild(heroFlex);
-    card.appendChild(minTemp);
-    card.appendChild(maxTemp);
+    sunrise.appendChild(sunriseIcon);
+    sunrise.appendChild(sunriseText);
+    sunset.appendChild(sunsetIcon);
+    sunset.appendChild(sunsetText);
+
     card.appendChild(pop);
     card.appendChild(sunrise);
     card.appendChild(sunset);

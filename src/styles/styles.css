@@ -44,9 +44,24 @@ html {
 }
 .basic-weather-card__maxTemp {
 }
-.basic-weather-card__pop {
+.additional-info-card {
+  display: flex;
 }
-.basic-weather-card__sunrise {
+.additional-info-card__pop,
+.additional-info-card__sunrise,
+.additional-info-card__sunset {
+  display: flex;
 }
-.basic-weather-card__sunset {
+
+.additional-info-card__pop__icon,
+.additional-info-card__sunrise__icon,
+.additional-info-card__sunset__icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.additional-info-card__pop__text,
+.additional-info-card__sunrise__text,
+.additional-info-card__sunset__text {
+  font-size: 1.4rem;
 }

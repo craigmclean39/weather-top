@@ -27,6 +27,10 @@ async function doSearch(e) {
 
     const wCard = WeatherDom.createBasicCard(wData);
     body.appendChild(wCard);
+
+    const additionalInfo = WeatherDom.createAdditionalInfoCard(wData);
+    body.appendChild(additionalInfo);
+
   } catch (error) {
     console.log(error);
   }

@@ -61,6 +61,7 @@ export default class WeatherFetcher {
     wdo.weatherId = cityWeatherDataJSON.current.weather[0].id;
     wdo.weatherMain = cityWeatherDataJSON.current.weather[0].main;
     wdo.weatherDescription = cityWeatherDataJSON.current.weather[0].description;
+    wdo.timezone = cityWeatherDataJSON.timezone;
 
     const dayTemps = [];
     for (let i = 0; i < cityWeatherDataJSON.daily.length; i++) {

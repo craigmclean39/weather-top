@@ -24,6 +24,8 @@ export default class WeatherDataObject {
     this._hourlyWeatherIds = [];
 
     this._temperatureMode = ConversionUtility.temperatureModes.kelvin;
+
+    this._timezone = "";
   }
 
   get temperatureMode() {
@@ -196,5 +198,13 @@ export default class WeatherDataObject {
       this._temperatureMode,
       ConversionUtility.temperatureModes.kelvin
     );
+  }
+
+  get timezone(){
+    return this._timezone;
+  }
+
+  set timezone(value) {
+    this._timezone = value;
   }
 }

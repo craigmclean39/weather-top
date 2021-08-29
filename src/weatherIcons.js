@@ -10,13 +10,17 @@ import SunnyHero from './icons/main/sunny.svg';
 import CloudsHero from './icons/main/clouds.svg';
 
 import StormSimple from './icons/simple/storm.svg';
-//import DrizzleSimple from './icons/simple/raining.svg';
+// import DrizzleSimple from './icons/simple/raining.svg';
 import RainingSimple from './icons/simple/raining.svg';
-//import SleetSimple from './icons/simple/snowing.svg';
+// import SleetSimple from './icons/simple/snowing.svg';
 import SnowingSimple from './icons/simple/snowing.svg';
 import TornadoSimple from './icons/simple/tornado.svg';
 import SunnySimple from './icons/simple/sunny.svg';
 import CloudsSimple from './icons/simple/clouds.svg';
+
+import PopIcon from './icons/simple/raindrops.svg';
+import SunriseIcon from './icons/simple/sunrise.svg';
+import SunsetIcon from './icons/simple/sunset.svg';
 
 export default class WeatherIcons {
   static getWeatherHeroIcon(weatherId) {
@@ -235,5 +239,17 @@ export default class WeatherIcons {
     }
 
     return returnIcon;
+  }
+
+  static getPopIcon() {
+    return PopIcon;
+  }
+
+  static getSunriseIcon() {
+    return SunriseIcon;
+  }
+
+  static getSunsetIcon() {
+    return SunsetIcon;
   }
 }
