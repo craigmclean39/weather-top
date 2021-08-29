@@ -184,7 +184,8 @@ export default class WeatherDom {
   static createWeeklyCard(wdo) {
     const card = DomHelper.createElement('div', 'weekly-card');
 
-    for (let i = 0; i < wdo.dayTemps.length; i++) {
+    //starting at 1 to ignore the current day
+    for (let i = 1; i < wdo.dayTemps.length; i++) {
       const dayDiv = DomHelper.createElement('div', 'weekly-card__dayInfo');
       const dayIcon = DomHelper.createElement(
         'img',
