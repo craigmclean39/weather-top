@@ -37,9 +37,10 @@ export default class WeatherDom {
 
     // Grab the current date and format it in this style '4th Aug, 2021 | Wednesday'
     const currentDate = Date.now();
-    const dateString1 = format(currentDate, 'do LLL');
-    const dateString2 = format(currentDate, 'yyyy');
-    const dateString3 = format(currentDate, 'EEEE');
+    const zonedDate = utcToZonedTime(currentDate, wdo.timezone);
+    const dateString1 = format(zonedDate, 'do LLL');
+    const dateString2 = format(zonedDate, 'yyyy');
+    const dateString3 = format(zonedDate, 'EEEE');
     const finalDateString = `${dateString1}, ${dateString2} | ${dateString3}`;
     date.innerText = finalDateString;
 
