@@ -31,6 +31,11 @@ async function doSearch(e) {
     const additionalInfo = WeatherDom.createAdditionalInfoCard(wData);
     body.appendChild(additionalInfo);
 
+    const hourlyCard = WeatherDom.createHourlyCard(wData);
+    body.appendChild(hourlyCard);
+
+    const weeklyCard = WeatherDom.createWeeklyCard(wData);
+    body.appendChild(weeklyCard);
   } catch (error) {
     console.log(error);
   }

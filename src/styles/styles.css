@@ -65,3 +65,38 @@ html {
 .additional-info-card__sunset__text {
   font-size: 1.4rem;
 }
+
+.hourly-card {
+  display: flex;
+}
+
+.hourly-card__hourInfo {
+  display: flex;
+}
+
+.hourly-card__hourInfo__icon {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.hourly-card__hourInfo__temp {
+  font-size: 1.4rem;
+}
+
+.weekly-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.weekly-card__dayInfo {
+  display: flex;
+}
+
+.weekly-card__dayInfo__icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.weekly-card__dayInfo__temp {
+  font-size: 1.8rem;
+}

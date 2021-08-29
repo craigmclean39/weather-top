@@ -154,4 +154,56 @@ export default class WeatherDom {
 
     return card;
   }
+
+  static createHourlyCard(wdo) {
+    const card = DomHelper.createElement('div', 'hourly-card');
+
+    for (let i = 0; i < wdo.hourlyTemps.length; i++) {
+      const hourDiv = DomHelper.createElement('div', 'hourly-card__hourInfo');
+      const hourIcon = DomHelper.createElement(
+        'img',
+        'hourly-card__hourInfo__icon'
+      );
+      const hourTemp = DomHelper.createElement(
+        'div',
+        'hourly-card__hourInfo__temp'
+      );
+
+      hourIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.hourlyWeatherIds[i]);
+      hourTemp.innerText = wdo.getHourlyTemp(i).toPrecision(3);
+
+      hourDiv.appendChild(hourIcon);
+      hourDiv.appendChild(hourTemp);
+
+      card.appendChild(hourDiv);
+    }
+
+    return card;
+  }
+
+  static createWeeklyCard(wdo) {
+    const card = DomHelper.createElement('div', 'weekly-card');
+
+    for (let i = 0; i < wdo.dayTemps.length; i++) {
+      const dayDiv = DomHelper.createElement('div', 'weekly-card__dayInfo');
+      const dayIcon = DomHelper.createElement(
+        'img',
+        'weekly-card__dayInfo__icon'
+      );
+      const dayTemp = DomHelper.createElement(
+        'div',
+        'weekly-card__dayInfo__temp'
+      );
+
+      dayIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.dayWeatherIds[i]);
+      dayTemp.innerText = wdo.getDayTemp(i).toPrecision(3);
+
+      dayDiv.appendChild(dayIcon);
+      dayDiv.appendChild(dayTemp);
+
+      card.appendChild(dayDiv);
+    }
+
+    return card;
+  }
 }

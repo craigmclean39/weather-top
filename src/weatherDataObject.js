@@ -25,7 +25,7 @@ export default class WeatherDataObject {
 
     this._temperatureMode = ConversionUtility.temperatureModes.kelvin;
 
-    this._timezone = "";
+    this._timezone = '';
   }
 
   get temperatureMode() {
@@ -140,7 +140,7 @@ export default class WeatherDataObject {
     this._dayTemps = arrValue;
   }
 
-  getDayTemps(dayIndex) {
+  getDayTemp(dayIndex) {
     return ConversionUtility.convertTemperature(
       this._dayTemps[dayIndex],
       this._temperatureMode,
@@ -148,11 +148,15 @@ export default class WeatherDataObject {
     );
   }
 
+  get dayTemps() {
+    return this._dayTemps;
+  }
+
   setDayMinTemps(arrValue) {
     this._dayMinTemps = arrValue;
   }
 
-  getDayMinTemps(dayIndex) {
+  getDayMinTemp(dayIndex) {
     return ConversionUtility.convertTemperature(
       this._dayMinTemps[dayIndex],
       this._temperatureMode,
@@ -160,11 +164,15 @@ export default class WeatherDataObject {
     );
   }
 
+  get dayMinTemps() {
+    return this._dayMinTemps;
+  }
+
   setDayMaxTemps(arrValue) {
     this._dayMaxTemps = arrValue;
   }
 
-  getDayMaxTemps(dayIndex) {
+  getDayMaxTemp(dayIndex) {
     return ConversionUtility.convertTemperature(
       this._dayMaxTemps[dayIndex],
       this._temperatureMode,
@@ -172,27 +180,39 @@ export default class WeatherDataObject {
     );
   }
 
+  get dayMaxTemps() {
+    return this._dayMaxTemps;
+  }
+
   setDayWeatherIds(arrValue) {
     this._dayWeatherIds = arrValue;
   }
 
-  getDayWeatherIds(dayIndex) {
+  getDayWeatherId(dayIndex) {
     return this._dayWeatherIds[dayIndex];
+  }
+
+  get dayWeatherIds() {
+    return this._dayWeatherIds;
   }
 
   setHourlyWeatherIds(arrValue) {
     this._hourlyWeatherIds = arrValue;
   }
 
-  getHourlyWeatherIds(hourIndex) {
+  getHourlyWeatherId(hourIndex) {
     return this._hourlyWeatherIds[hourIndex];
+  }
+
+  get hourlyWeatherIds() {
+    return this._hourlyWeatherIds;
   }
 
   setHourlyTemps(arrValue) {
     this._hourlyTemps = arrValue;
   }
 
-  getHourlyTemps(hourIndex) {
+  getHourlyTemp(hourIndex) {
     return ConversionUtility.convertTemperature(
       this._hourlyTemps[hourIndex],
       this._temperatureMode,
@@ -200,7 +220,11 @@ export default class WeatherDataObject {
     );
   }
 
-  get timezone(){
+  get hourlyTemps() {
+    return this._hourlyTemps;
+  }
+
+  get timezone() {
     return this._timezone;
   }
 
