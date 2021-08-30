@@ -89,6 +89,8 @@ export default class WeatherDom {
     card.appendChild(minTemp);
     card.appendChild(maxTemp);
 
+    card.appendChild(this.createAdditionalInfoCard(wdo));
+
     return card;
   }
 
@@ -114,7 +116,7 @@ export default class WeatherDom {
       'additional-info-card__pop__text'
     );
     popIcon.src = WeatherIcons.getPopIcon();
-    popText.innerText = `${wdo.currentPop}%`;
+    popText.innerText = `${wdo.currentPop * 100}%`;
 
     pop.appendChild(popIcon);
     pop.appendChild(popText);
@@ -177,16 +179,26 @@ export default class WeatherDom {
         'div',
         'hourly-card__hourInfo__temp'
       );
-      const hourHour = DomHelper.createElement('div', 'hourly-card++hourHour');
+      const hourHour = DomHelper.createElement('div', 'hourly-card__hourHour');
 
       const hourOfDay = add(currentDate, { hours: i });
       const zonedDate = utcToZonedTime(hourOfDay, wdo.timezone);
-      const formattedHourOfDay = format(zonedDate, 'kk');
+      const formattedHourOfDay = format(zonedDate, 'KK aa');
 
       hourHour.innerText = formattedHourOfDay;
 
       hourIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.hourlyWeatherIds[i]);
-      hourTemp.innerText = wdo.getHourlyTemp(i).toPrecision(3);
+      /* let tempMode = '';
+      if (wdo.temperatureMode === ConversionUtility.temperatureModes.celsius) {
+        tempMode = 'C';
+      } else if (
+        wdo.temperatureMode === ConversionUtility.temperatureModes.fahrenheit
+      ) {
+        tempMode = 'F';
+      } else {
+        tempMode = 'K';
+      } */
+      hourTemp.innerText = `${wdo.getHourlyTemp(i).toPrecision(3)}°`;
 
       hourDiv.appendChild(hourHour);
       hourDiv.appendChild(hourIcon);

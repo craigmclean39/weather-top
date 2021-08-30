@@ -3,6 +3,7 @@ import ConversionUtility from './conversionUtility';
 import WeatherFetcher from './weatherFetcher';
 import WeatherDom from './weatherDom';
 import LocalStorageHelper from './localStorageHelper';
+import SearchIcon from './icons/search.svg';
 
 export default class WeatherAppManager {
   constructor() {
@@ -22,8 +23,13 @@ export default class WeatherAppManager {
     this.addFavoriteCity('Dubai');
     this.addFavoriteCity('London');
 
+    this.createHeader();
     this.createForm();
     this.createFavorites();
+
+    this._weatherGrid = this._content.appendChild(
+      DomHelper.createElement('div', 'weather-grid')
+    );
 
     if (this._favoriteCities.length >= 1) {
       this.loadWeather(this._favoriteCities[0]);
@@ -34,6 +40,7 @@ export default class WeatherAppManager {
     e.preventDefault();
 
     this.loadWeather(this.input.value);
+    this.input.value = '';
   }
 
   async loadWeather(cityName) {
@@ -46,10 +53,36 @@ export default class WeatherAppManager {
     }
   }
 
+  createHeader() {
+    this._header = this._content.appendChild(
+      DomHelper.createElement('div', 'header')
+    );
+  }
+
   createForm() {
-    this.form = this._content.appendChild(DomHelper.createElement('form'));
-    this.input = this.form.appendChild(DomHelper.createElement('input'));
-    this.submit = this.form.appendChild(DomHelper.createElement('button'));
+    this.form = this._content.appendChild(
+      DomHelper.createElement('form', 'search-form')
+    );
+
+    const searchBar = DomHelper.createElement('div', 'search-form__search-bar');
+
+    const searchIcon = DomHelper.createElement(
+      'img',
+      'search-form__search-bar__icon'
+    );
+    searchIcon.src = SearchIcon;
+
+    this.input = DomHelper.createElement(
+      'input',
+      'search-form__search-bar__text-input'
+    );
+
+    searchBar.appendChild(searchIcon);
+    searchBar.appendChild(this.input);
+    this.form.appendChild(searchBar);
+    this.submit = this.form.appendChild(
+      DomHelper.createElement('button', 'search-form__submit_button')
+    );
 
     this.input.type = 'text';
     this.input.placeholder = 'Enter City Name';
@@ -92,37 +125,18 @@ export default class WeatherAppManager {
       ConversionUtility.temperatureModes.celsius;
 
     const wCard = WeatherDom.createBasicCard(this._currentWeatherData);
-    this._content.appendChild(wCard);
-
-    const additionalInfo = WeatherDom.createAdditionalInfoCard(
-      this._currentWeatherData
-    );
-    this._content.appendChild(additionalInfo);
+    this._weatherGrid.appendChild(wCard);
 
     const hourlyCard = WeatherDom.createHourlyCard(this._currentWeatherData);
-    this._content.appendChild(hourlyCard);
+    this._weatherGrid.appendChild(hourlyCard);
 
     const weeklyCard = WeatherDom.createWeeklyCard(this._currentWeatherData);
-    this._content.appendChild(weeklyCard);
+    this._weatherGrid.appendChild(weeklyCard);
   }
 
   clearWeather() {
-    const a = this._content.querySelector('.basic-weather-card');
-    const b = this._content.querySelector('.additional-info-card');
-    const c = this._content.querySelector('.hourly-card');
-    const d = this._content.querySelector('.weekly-card');
-
-    if (a != null) {
-      this._content.removeChild(a);
-    }
-    if (b != null) {
-      this._content.removeChild(b);
-    }
-    if (c != null) {
-      this._content.removeChild(c);
-    }
-    if (d != null) {
-      this._content.removeChild(d);
+    while (this._weatherGrid.firstChild) {
+      this._weatherGrid.removeChild(this._weatherGrid.lastChild);
     }
   }
 
