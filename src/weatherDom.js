@@ -159,6 +159,7 @@ export default class WeatherDom {
   static createHourlyCard(wdo) {
     const card = DomHelper.createElement('div', 'hourly-card');
 
+    const currentDate = Date.now();
     for (let i = 0; i < wdo.hourlyTemps.length; i++) {
       const hourDiv = DomHelper.createElement('div', 'hourly-card__hourInfo');
       const hourIcon = DomHelper.createElement(
@@ -169,14 +170,26 @@ export default class WeatherDom {
         'div',
         'hourly-card__hourInfo__temp'
       );
+      const hourHour = DomHelper.createElement('div', 'hourly-card++hourHour');
+
+      const hourOfDay = add(currentDate, { hours: i });
+      const zonedDate = utcToZonedTime(hourOfDay, wdo.timezone);
+      const formattedHourOfDay = format(zonedDate, 'kk');
+
+      hourHour.innerText = formattedHourOfDay;
 
       hourIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.hourlyWeatherIds[i]);
       hourTemp.innerText = wdo.getHourlyTemp(i).toPrecision(3);
 
+      hourDiv.appendChild(hourHour);
       hourDiv.appendChild(hourIcon);
       hourDiv.appendChild(hourTemp);
 
       card.appendChild(hourDiv);
+
+      if (i === 24) {
+        break;
+      }
     }
 
     return card;
@@ -187,7 +200,7 @@ export default class WeatherDom {
 
     const currentDate = Date.now();
 
-    //starting at 1 to ignore the current day
+    // starting at 1 to ignore the current day
     for (let i = 1; i < wdo.dayTemps.length; i++) {
       const dayDiv = DomHelper.createElement('div', 'weekly-card__dayInfo');
       const dayIcon = DomHelper.createElement(
