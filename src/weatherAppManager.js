@@ -2,14 +2,47 @@ import DomHelper from './domHelper';
 import ConversionUtility from './conversionUtility';
 import WeatherFetcher from './weatherFetcher';
 import WeatherDom from './weatherDom';
+import LocalStorageHelper from './localStorageHelper';
 
 export default class WeatherAppManager {
   constructor() {
     this.doSearch = this.doSearch.bind(this);
 
     this.body = document.querySelector('body');
+    this._content = this.body.appendChild(
+      DomHelper.createElement('div', 'content')
+    );
 
-    this.form = this.body.appendChild(DomHelper.createElement('form'));
+    this.createForm();
+
+    this.localStorageHelper = new LocalStorageHelper();
+    this._favoriteCities = [];
+    this.loadFavoriteCities();
+
+    this.addFavoriteCity('Squamish');
+
+    if (this._favoriteCities.length >= 1) {
+      this.loadWeather(this._favoriteCities[0]);
+    }
+  }
+
+  doSearch(e) {
+    e.preventDefault();
+
+    this.loadWeather(this.input.value);
+  }
+
+  async loadWeather(cityName) {
+    try {
+      this._currentWeatherData = await WeatherFetcher.getWeather(cityName);
+      this.displayWeatherData();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  createForm() {
+    this.form = this._content.appendChild(DomHelper.createElement('form'));
     this.input = this.form.appendChild(DomHelper.createElement('input'));
     this.submit = this.form.appendChild(DomHelper.createElement('button'));
 
@@ -21,26 +54,39 @@ export default class WeatherAppManager {
     this.form.addEventListener('submit', this.doSearch);
   }
 
-  async doSearch(e) {
-    e.preventDefault();
+  displayWeatherData() {
+    this._currentWeatherData.temperatureMode =
+      ConversionUtility.temperatureModes.celsius;
 
-    try {
-      const wData = await WeatherFetcher.getWeather(this.input.value);
-      wData._temperatureMode = ConversionUtility.temperatureModes.celsius;
+    const wCard = WeatherDom.createBasicCard(this._currentWeatherData);
+    this.body.appendChild(wCard);
 
-      const wCard = WeatherDom.createBasicCard(wData);
-      this.body.appendChild(wCard);
+    const additionalInfo = WeatherDom.createAdditionalInfoCard(
+      this._currentWeatherData
+    );
+    this.body.appendChild(additionalInfo);
 
-      const additionalInfo = WeatherDom.createAdditionalInfoCard(wData);
-      this.body.appendChild(additionalInfo);
+    const hourlyCard = WeatherDom.createHourlyCard(this._currentWeatherData);
+    this.body.appendChild(hourlyCard);
 
-      const hourlyCard = WeatherDom.createHourlyCard(wData);
-      this.body.appendChild(hourlyCard);
+    const weeklyCard = WeatherDom.createWeeklyCard(this._currentWeatherData);
+    this.body.appendChild(weeklyCard);
+  }
 
-      const weeklyCard = WeatherDom.createWeeklyCard(wData);
-      this.body.appendChild(weeklyCard);
-    } catch (error) {
-      console.log(error);
+  addFavoriteCity(cityName) {
+    if (!this._favoriteCities.includes(cityName)) {
+      this._favoriteCities.push(cityName);
+      this.localStorageHelper.clearItems('favoriteCities');
+      this.localStorageHelper.saveItem('favoriteCities', this._favoriteCities);
+    }
+  }
+
+  loadFavoriteCities() {
+    let returnVal = this.localStorageHelper.retrieveItem('favoriteCities');
+    if (returnVal != null && returnVal !== undefined) {
+      returnVal = JSON.parse(returnVal);
+
+      this._favoriteCities = returnVal;
     }
   }
 }

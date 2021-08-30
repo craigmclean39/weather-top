@@ -14,6 +14,9 @@ export default class WeatherDom {
       'div',
       'basic-weather-card__location'
     );
+
+    const time = DomHelper.createElement('div', 'basic-weather-card__time');
+
     const heroIcon = DomHelper.createElement(
       'img',
       'basic-weather-card__hero-icon'
@@ -45,6 +48,8 @@ export default class WeatherDom {
     const finalDateString = `${dateString1}, ${dateString2} | ${dateString3}`;
     date.innerText = finalDateString;
 
+    time.innerText = format(zonedDate, 'p');
+
     const locationString = `${wdo.cityName}, ${wdo.countryName}`;
     location.innerText = locationString;
 
@@ -74,6 +79,8 @@ export default class WeatherDom {
       'div',
       'basic-weather-card__hero-flex'
     );
+
+    heroFlex.appendChild(time);
     heroFlex.appendChild(heroIcon);
     heroFlex.appendChild(currentTemp);
     heroFlex.appendChild(mainWeather);
@@ -160,7 +167,7 @@ export default class WeatherDom {
     const card = DomHelper.createElement('div', 'hourly-card');
 
     const currentDate = Date.now();
-    for (let i = 0; i < wdo.hourlyTemps.length; i++) {
+    for (let i = 1; i < wdo.hourlyTemps.length; i++) {
       const hourDiv = DomHelper.createElement('div', 'hourly-card__hourInfo');
       const hourIcon = DomHelper.createElement(
         'img',
@@ -187,6 +194,7 @@ export default class WeatherDom {
 
       card.appendChild(hourDiv);
 
+      // I just want 1 days worth or info
       if (i === 24) {
         break;
       }
