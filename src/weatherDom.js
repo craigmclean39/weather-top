@@ -1,4 +1,5 @@
 import format from 'date-fns/format';
+import add from 'date-fns/add';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import WeatherDataObject from './weatherDataObject';
 import WeatherIcons from './weatherIcons';
@@ -184,6 +185,8 @@ export default class WeatherDom {
   static createWeeklyCard(wdo) {
     const card = DomHelper.createElement('div', 'weekly-card');
 
+    const currentDate = Date.now();
+
     //starting at 1 to ignore the current day
     for (let i = 1; i < wdo.dayTemps.length; i++) {
       const dayDiv = DomHelper.createElement('div', 'weekly-card__dayInfo');
@@ -195,10 +198,21 @@ export default class WeatherDom {
         'div',
         'weekly-card__dayInfo__temp'
       );
+      const dayDay = DomHelper.createElement(
+        'div',
+        'weekly-card__dayInfo__day'
+      );
+
+      const dayOfWeek = add(currentDate, { days: i });
+      const zonedDate = utcToZonedTime(dayOfWeek, wdo.timezone);
+      const formattedDayOfWeek = format(zonedDate, 'EEEE');
+
+      dayDay.innerText = formattedDayOfWeek;
 
       dayIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.dayWeatherIds[i]);
       dayTemp.innerText = wdo.getDayTemp(i).toPrecision(3);
 
+      dayDiv.appendChild(dayDay);
       dayDiv.appendChild(dayIcon);
       dayDiv.appendChild(dayTemp);
 

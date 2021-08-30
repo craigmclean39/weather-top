@@ -68,6 +68,8 @@ html {
 
 .hourly-card {
   display: flex;
+  width: 100%;
+  overflow-x: scroll;
 }
 
 .hourly-card__hourInfo {
