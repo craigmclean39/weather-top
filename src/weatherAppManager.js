@@ -116,8 +116,6 @@ export default class WeatherAppManager {
     e.preventDefault();
 
     this.loadWeather(e.submitter.dataset.city);
-
-    console.log(e);
   }
 
   displayWeatherData() {

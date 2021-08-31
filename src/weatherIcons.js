@@ -7,10 +7,11 @@ import SleetHero from './icons/main/sleet.svg';
 import SnowingHero from './icons/main/snowing.svg';
 import TornadoHero from './icons/main/tornado.svg';
 import SunnyHero from './icons/main/sunny.svg';
+import SunnyNightHero from './icons/main/sunny-night.svg';
 import CloudsHero from './icons/main/clouds.svg';
 
 import StormSimple from './icons/simple/storm.svg';
-// import DrizzleSimple from './icons/simple/raining.svg';
+import DrizzleSimple from './icons/simple/drizzle.svg';
 import RainingSimple from './icons/simple/raining.svg';
 // import SleetSimple from './icons/simple/snowing.svg';
 import SnowingSimple from './icons/simple/snowing.svg';
@@ -18,12 +19,12 @@ import TornadoSimple from './icons/simple/tornado.svg';
 import SunnySimple from './icons/simple/sunny.svg';
 import CloudsSimple from './icons/simple/clouds.svg';
 
-import PopIcon from './icons/simple/raindrops.svg';
-import SunriseIcon from './icons/simple/sunrise.svg';
-import SunsetIcon from './icons/simple/sunset.svg';
+import PopIcon from './icons/drops.svg';
+import SunriseIcon from './icons/sunrise.svg';
+import SunsetIcon from './icons/sunset.svg';
 
 export default class WeatherIcons {
-  static getWeatherHeroIcon(weatherId) {
+  static getWeatherHeroIcon(weatherId, nightIcon) {
     let returnIcon = ErrorIcon;
 
     switch (weatherId) {
@@ -113,7 +114,11 @@ export default class WeatherIcons {
       }
       // clear
       case 800: {
-        returnIcon = SunnyHero;
+        if (!nightIcon) {
+          returnIcon = SunnyHero;
+        } else {
+          returnIcon = SunnyNightHero;
+        }
         break;
       }
       // few clouds
@@ -162,7 +167,7 @@ export default class WeatherIcons {
       case 312:
       case 313:
       case 321: {
-        returnIcon = RainingSimple;
+        returnIcon = DrizzleSimple;
         break;
       }
 

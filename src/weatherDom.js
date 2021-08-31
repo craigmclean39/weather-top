@@ -23,7 +23,7 @@ export default class WeatherDom {
     );
     const currentTemp = DomHelper.createElement(
       'div',
-      'basic-weather-card__current-temp'
+      'basic-weather-card__temps__current-temp'
     );
 
     const mainWeather = DomHelper.createElement(
@@ -32,11 +32,21 @@ export default class WeatherDom {
     );
     const minTemp = DomHelper.createElement(
       'div',
-      'basic-weather-card__minTemp'
+      'basic-weather-card__temps__minTemp'
     );
     const maxTemp = DomHelper.createElement(
       'div',
-      'basic-weather-card__maxTemp'
+      'basic-weather-card__temps__maxTemp'
+    );
+
+    const allTemps = DomHelper.createElement(
+      'div',
+      'basic-weather-card__temps'
+    );
+
+    const minMaxTemps = DomHelper.createElement(
+      'div',
+      'basic-weather-card__temps__minMax'
     );
 
     // Grab the current date and format it in this style '4th Aug, 2021 | Wednesday'
@@ -53,7 +63,19 @@ export default class WeatherDom {
     const locationString = `${wdo.cityName}, ${wdo.countryName}`;
     location.innerText = locationString;
 
-    heroIcon.src = WeatherIcons.getWeatherHeroIcon(wdo.weatherId);
+    // check if it's after sunset or before sunrise, if so, use night icons
+    let sunriseTime = new Date(wdo.sunriseTime * 1000);
+    let sunsetTime = new Date(wdo.sunsetTime * 1000);
+
+    sunriseTime = utcToZonedTime(sunriseTime, wdo.timezone);
+    sunsetTime = utcToZonedTime(sunsetTime, wdo.timezone);
+
+    let nightIcon = false;
+    if (zonedDate < sunriseTime || zonedDate > sunsetTime) {
+      nightIcon = true;
+    }
+
+    heroIcon.src = WeatherIcons.getWeatherHeroIcon(wdo.weatherId, nightIcon);
     heroIcon.alt = wdo.weatherMain;
 
     let tempMode = '';
@@ -66,9 +88,22 @@ export default class WeatherDom {
     } else {
       tempMode = 'K';
     }
-    currentTemp.innerText = `${Math.round(wdo.currentTemp)}° ${tempMode}`;
-    minTemp.innerText = `Low: ${Math.round(wdo.minTemp)}° ${tempMode}`;
-    maxTemp.innerText = `Hi: ${Math.round(wdo.maxTemp)}° ${tempMode}`;
+    currentTemp.innerText = `${Math.round(wdo.currentTemp)}°`;
+
+    const mode = DomHelper.createElement('span');
+    mode.innerText = tempMode;
+    currentTemp.appendChild(mode);
+
+    minTemp.innerText = 'Low: ';
+    maxTemp.innerText = 'Hi: ';
+
+    const lo = DomHelper.createElement('span');
+    lo.innerText = `${Math.round(wdo.minTemp)}°`;
+    const hi = DomHelper.createElement('span');
+    hi.innerText = `${Math.round(wdo.maxTemp)}°`;
+
+    minTemp.appendChild(lo);
+    maxTemp.appendChild(hi);
 
     mainWeather.innerText = wdo.weatherMain;
 
@@ -82,12 +117,16 @@ export default class WeatherDom {
 
     heroFlex.appendChild(time);
     heroFlex.appendChild(heroIcon);
-    heroFlex.appendChild(currentTemp);
+
+    allTemps.appendChild(currentTemp);
+    minMaxTemps.appendChild(minTemp);
+    minMaxTemps.appendChild(maxTemp);
+    allTemps.appendChild(minMaxTemps);
+
+    heroFlex.appendChild(allTemps);
     heroFlex.appendChild(mainWeather);
 
     card.appendChild(heroFlex);
-    card.appendChild(minTemp);
-    card.appendChild(maxTemp);
 
     card.appendChild(this.createAdditionalInfoCard(wdo));
 
@@ -179,26 +218,19 @@ export default class WeatherDom {
         'div',
         'hourly-card__hourInfo__temp'
       );
-      const hourHour = DomHelper.createElement('div', 'hourly-card__hourHour');
+      const hourHour = DomHelper.createElement(
+        'div',
+        'hourly-card__hourInfo__hourHour'
+      );
 
       const hourOfDay = add(currentDate, { hours: i });
       const zonedDate = utcToZonedTime(hourOfDay, wdo.timezone);
-      const formattedHourOfDay = format(zonedDate, 'KK aa');
+      const formattedHourOfDay = format(zonedDate, 'h aa');
 
       hourHour.innerText = formattedHourOfDay;
 
       hourIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.hourlyWeatherIds[i]);
-      /* let tempMode = '';
-      if (wdo.temperatureMode === ConversionUtility.temperatureModes.celsius) {
-        tempMode = 'C';
-      } else if (
-        wdo.temperatureMode === ConversionUtility.temperatureModes.fahrenheit
-      ) {
-        tempMode = 'F';
-      } else {
-        tempMode = 'K';
-      } */
-      hourTemp.innerText = `${wdo.getHourlyTemp(i).toPrecision(3)}°`;
+      hourTemp.innerText = `${Math.round(wdo.getHourlyTemp(i) * 10) / 10}°`;
 
       hourDiv.appendChild(hourHour);
       hourDiv.appendChild(hourIcon);
@@ -223,13 +255,19 @@ export default class WeatherDom {
     // starting at 1 to ignore the current day
     for (let i = 1; i < wdo.dayTemps.length; i++) {
       const dayDiv = DomHelper.createElement('div', 'weekly-card__dayInfo');
+
+      const dayIconTemp = DomHelper.createElement(
+        'div',
+        'weekly-card__dayInfo__day-temp'
+      );
+
       const dayIcon = DomHelper.createElement(
         'img',
-        'weekly-card__dayInfo__icon'
+        'weekly-card__dayInfo__day-temp__icon'
       );
       const dayTemp = DomHelper.createElement(
         'div',
-        'weekly-card__dayInfo__temp'
+        'weekly-card__dayInfo__day-temp__temp'
       );
       const dayDay = DomHelper.createElement(
         'div',
@@ -243,11 +281,12 @@ export default class WeatherDom {
       dayDay.innerText = formattedDayOfWeek;
 
       dayIcon.src = WeatherIcons.getWeatherSimpleIcon(wdo.dayWeatherIds[i]);
-      dayTemp.innerText = wdo.getDayTemp(i).toPrecision(3);
+      dayTemp.innerText = `${wdo.getDayTemp(i).toPrecision(3)}°`;
 
       dayDiv.appendChild(dayDay);
-      dayDiv.appendChild(dayIcon);
-      dayDiv.appendChild(dayTemp);
+      dayIconTemp.appendChild(dayIcon);
+      dayIconTemp.appendChild(dayTemp);
+      dayDiv.appendChild(dayIconTemp);
 
       card.appendChild(dayDiv);
     }
