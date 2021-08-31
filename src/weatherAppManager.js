@@ -32,22 +32,22 @@ export default class WeatherAppManager {
     );
 
     if (this._favoriteCities.length >= 1) {
-      this.loadWeather(this._favoriteCities[0]);
+      this.loadWeather(this._favoriteCities[0], true);
     }
   }
 
   doSearch(e) {
     e.preventDefault();
 
-    this.loadWeather(this.input.value);
+    this.loadWeather(this.input.value, false);
     this.input.value = '';
   }
 
-  async loadWeather(cityName) {
+  async loadWeather(cityName, isFavorite) {
     try {
       this._currentWeatherData = await WeatherFetcher.getWeather(cityName);
       this.clearWeather();
-      this.displayWeatherData();
+      this.displayWeatherData(isFavorite);
     } catch (error) {
       console.log(error);
     }
@@ -115,14 +115,22 @@ export default class WeatherAppManager {
   getFavoriteWeather(e) {
     e.preventDefault();
 
-    this.loadWeather(e.submitter.dataset.city);
+    this.loadWeather(e.submitter.dataset.city, true);
   }
 
-  displayWeatherData() {
+  toggleFavorite(e) {
+    console.log('Something');
+  }
+
+  displayWeatherData(isFavorite) {
     this._currentWeatherData.temperatureMode =
       ConversionUtility.temperatureModes.celsius;
 
-    const wCard = WeatherDom.createBasicCard(this._currentWeatherData);
+    const wCard = WeatherDom.createBasicCard(
+      this._currentWeatherData,
+      isFavorite,
+      this.toggleFavorite
+    );
     this._weatherGrid.appendChild(wCard);
 
     const hourlyCard = WeatherDom.createHourlyCard(this._currentWeatherData);

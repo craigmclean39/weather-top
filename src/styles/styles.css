@@ -88,6 +88,11 @@ body {
   justify-content: space-between;
 }
 
+.basic-weather-card__favorite {
+  width: 2rem;
+  height: 2rem;
+}
+
 .basic-weather-card__date {
   font-weight: 400;
   font-size: 1.4rem;
@@ -144,13 +149,14 @@ body {
 
 .basic-weather-card__temps__minTemp,
 .basic-weather-card__temps__maxTemp {
+  font-weight: 500;
   font-size: 1.2rem;
   font-family: 'Montserrat';
 }
 
 .basic-weather-card__temps__minTemp span,
 .basic-weather-card__temps__maxTemp span {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-family: 'Bebas Neue';
 }
 

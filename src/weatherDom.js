@@ -5,14 +5,21 @@ import WeatherDataObject from './weatherDataObject';
 import WeatherIcons from './weatherIcons';
 import DomHelper from './domHelper';
 import ConversionUtility from './conversionUtility';
+import FavoriteIconFilled from './icons/starFilled.svg';
+import FavoriteIconUnfilled from './icons/star.svg';
 
 export default class WeatherDom {
-  static createBasicCard(wdo) {
+  static createBasicCard(wdo, isFavorite, favoriteCallback) {
     const card = DomHelper.createElement('div', 'basic-weather-card');
     const date = DomHelper.createElement('div', 'basic-weather-card__date');
     const location = DomHelper.createElement(
       'div',
       'basic-weather-card__location'
+    );
+
+    const favorite = DomHelper.createElement(
+      'img',
+      'basic-weather-card__favorite'
     );
 
     const time = DomHelper.createElement('div', 'basic-weather-card__time');
@@ -48,6 +55,16 @@ export default class WeatherDom {
       'div',
       'basic-weather-card__temps__minMax'
     );
+
+    if (isFavorite) {
+      favorite.src = FavoriteIconFilled;
+      favorite.dataset.isFavorite = true;
+    } else {
+      favorite.src = FavoriteIconUnfilled;
+      favorite.dataset.isFavorite = false;
+    }
+
+    favorite.addEventListener('click', favoriteCallback);
 
     // Grab the current date and format it in this style '4th Aug, 2021 | Wednesday'
     const currentDate = Date.now();
@@ -107,6 +124,7 @@ export default class WeatherDom {
 
     mainWeather.innerText = wdo.weatherMain;
 
+    card.appendChild(favorite);
     card.appendChild(date);
     card.appendChild(location);
 
