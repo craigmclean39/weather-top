@@ -9,6 +9,7 @@ export default class WeatherAppManager {
   constructor() {
     this.doSearch = this.doSearch.bind(this);
     this.getFavoriteWeather = this.getFavoriteWeather.bind(this);
+    this.toggleFavorite = this.toggleFavorite.bind(this);
 
     this.body = document.querySelector('body');
     this._content = this.body.appendChild(
@@ -19,9 +20,9 @@ export default class WeatherAppManager {
     this._favoriteCities = [];
     this.loadFavoriteCities();
     // todo remove this
-    this.addFavoriteCity('Squamish');
+    /* this.addFavoriteCity('Squamish');
     this.addFavoriteCity('Dubai');
-    this.addFavoriteCity('London');
+    this.addFavoriteCity('London'); */
 
     this.createHeader();
     this.createForm();
@@ -48,6 +49,7 @@ export default class WeatherAppManager {
       this._currentWeatherData = await WeatherFetcher.getWeather(cityName);
       this.clearWeather();
       this.displayWeatherData(isFavorite);
+      this._currentCity = cityName;
     } catch (error) {
       console.log(error);
     }
@@ -98,6 +100,22 @@ export default class WeatherAppManager {
       'favorite-cities-form'
     );
 
+    this.addFavoriteButtons();
+
+    this._favoritesForm.addEventListener('submit', this.getFavoriteWeather);
+    this._content.appendChild(this._favoritesForm);
+  }
+
+  reloadFavorites() {
+    // remove all children
+    while (this._favoritesForm.firstChild) {
+      this._favoritesForm.removeChild(this._favoritesForm.lastChild);
+    }
+
+    this.addFavoriteButtons();
+  }
+
+  addFavoriteButtons() {
     for (let i = 0; i < this._favoriteCities.length; i++) {
       const button = this._favoritesForm.appendChild(
         DomHelper.createElement('button', 'favorite-cities-form__city-button')
@@ -107,19 +125,12 @@ export default class WeatherAppManager {
       button.innerText = this._favoriteCities[i];
       button.dataset.city = this._favoriteCities[i];
     }
-
-    this._favoritesForm.addEventListener('submit', this.getFavoriteWeather);
-    this._content.appendChild(this._favoritesForm);
   }
 
   getFavoriteWeather(e) {
     e.preventDefault();
 
     this.loadWeather(e.submitter.dataset.city, true);
-  }
-
-  toggleFavorite(e) {
-    console.log('Something');
   }
 
   displayWeatherData(isFavorite) {
@@ -151,6 +162,17 @@ export default class WeatherAppManager {
       this._favoriteCities.push(cityName);
       this.localStorageHelper.clearItems('favoriteCities');
       this.localStorageHelper.saveItem('favoriteCities', this._favoriteCities);
+      this.reloadFavorites();
+    }
+  }
+
+  removeFavoriteCity(cityName) {
+    if (this._favoriteCities.includes(cityName)) {
+      const index = this._favoriteCities.indexOf(cityName);
+      this._favoriteCities.splice(index, 1);
+      this.localStorageHelper.clearItems('favoriteCities');
+      this.localStorageHelper.saveItem('favoriteCities', this._favoriteCities);
+      this.reloadFavorites();
     }
   }
 
@@ -160,6 +182,20 @@ export default class WeatherAppManager {
       returnVal = JSON.parse(returnVal);
 
       this._favoriteCities = returnVal;
+    }
+  }
+
+  toggleFavorite(e) {
+    console.dir(e);
+
+    const isFavorite = WeatherDom.toggleFavoriteIcon(e.target);
+
+    console.log(isFavorite);
+
+    if (isFavorite) {
+      this.addFavoriteCity(this._currentCity);
+    } else {
+      this.removeFavoriteCity(this._currentCity);
     }
   }
 }

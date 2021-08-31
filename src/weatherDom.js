@@ -311,4 +311,25 @@ export default class WeatherDom {
 
     return card;
   }
+
+  static toggleFavoriteIcon(element) {
+    let favElement = null;
+    if (!element.classList.contains('basic-weather-card__favorite')) {
+      favElement = element.querySelector('basic-weather-card__favorite');
+    } else {
+      favElement = element;
+    }
+
+    let retVal = false;
+    if (favElement.dataset.isFavorite === 'true') {
+      favElement.dataset.isFavorite = false;
+      favElement.src = FavoriteIconUnfilled;
+      retVal = false;
+    } else {
+      favElement.dataset.isFavorite = true;
+      favElement.src = FavoriteIconFilled;
+      retVal = true;
+    }
+    return retVal;
+  }
 }

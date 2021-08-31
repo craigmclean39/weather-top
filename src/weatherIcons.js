@@ -2,13 +2,17 @@
 import ErrorIcon from './icons/main/error.svg';
 import StormHero from './icons/main/storm.svg';
 import DrizzleHero from './icons/main/drizzle.svg';
+import DrizzleNightHero from './icons/main/drizzle-night.svg';
 import RainingHero from './icons/main/raining.svg';
+import RainingNightHero from './icons/main/raining-night.svg';
 import SleetHero from './icons/main/sleet.svg';
 import SnowingHero from './icons/main/snowing.svg';
+import SnowingNightHero from './icons/main/snowing-night.svg';
 import TornadoHero from './icons/main/tornado.svg';
 import SunnyHero from './icons/main/sunny.svg';
 import SunnyNightHero from './icons/main/sunny-night.svg';
 import CloudsHero from './icons/main/clouds.svg';
+import CloudsNightHero from './icons/main/clouds-night.svg';
 
 import StormSimple from './icons/simple/storm.svg';
 import DrizzleSimple from './icons/simple/drizzle.svg';
@@ -51,7 +55,11 @@ export default class WeatherIcons {
       case 312:
       case 313:
       case 321: {
-        returnIcon = DrizzleHero;
+        if (!nightIcon) {
+          returnIcon = DrizzleHero;
+        } else {
+          returnIcon = DrizzleNightHero;
+        }
         break;
       }
 
@@ -66,7 +74,11 @@ export default class WeatherIcons {
       case 521:
       case 522:
       case 531: {
-        returnIcon = RainingHero;
+        if (!nightIcon) {
+          returnIcon = RainingHero;
+        } else {
+          returnIcon = RainingNightHero;
+        }
         break;
       }
       case 611: {
@@ -86,7 +98,11 @@ export default class WeatherIcons {
       case 613:
       case 621:
       case 622: {
-        returnIcon = SnowingHero;
+        if (!nightIcon) {
+          returnIcon = SnowingHero;
+        } else {
+          returnIcon = SnowingNightHero;
+        }
         break;
       }
       // mist
@@ -129,7 +145,11 @@ export default class WeatherIcons {
       case 803:
       // overcase clouds
       case 804: {
-        returnIcon = CloudsHero;
+        if (!nightIcon) {
+          returnIcon = CloudsHero;
+        } else {
+          returnIcon = CloudsNightHero;
+        }
         break;
       }
       default: {
