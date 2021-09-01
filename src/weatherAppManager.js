@@ -10,6 +10,9 @@ export default class WeatherAppManager {
     this.doSearch = this.doSearch.bind(this);
     this.getFavoriteWeather = this.getFavoriteWeather.bind(this);
     this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.toggleTempuratureMode = this.toggleTempuratureMode.bind(this);
+
+    this._temperatureMode = ConversionUtility.temperatureModes.celsius;
 
     this.body = document.querySelector('body');
     this._content = this.body.appendChild(
@@ -40,8 +43,21 @@ export default class WeatherAppManager {
   doSearch(e) {
     e.preventDefault();
 
-    this.loadWeather(this.input.value, false);
+    const city =
+      this.input.value.charAt(0).toUpperCase() + this.input.value.slice(1);
+    this.loadWeather(city, false);
     this.input.value = '';
+  }
+
+  reloadWeather() {
+    let isCurrentFavorite = false;
+    for (let i = 0; i < this._favoriteCities.length; i++) {
+      if (this._currentCity === this._favoriteCities[i]) {
+        isCurrentFavorite = true;
+        break;
+      }
+    }
+    this.loadWeather(this._currentCity, isCurrentFavorite);
   }
 
   async loadWeather(cityName, isFavorite) {
@@ -60,9 +76,19 @@ export default class WeatherAppManager {
       DomHelper.createElement('div', 'header')
     );
 
-    const title = DomHelper.createElement('h1', 'title');
+    const title = DomHelper.createElement('h1', 'header__title');
     title.innerText = 'gotWEATHER?';
     this._header.appendChild(title);
+
+    this._tempModeBtn = DomHelper.createElement(
+      'button',
+      'header__temp-mode-button'
+    );
+    this._tempModeBtn.innerText = 'C';
+
+    this._tempModeBtn.addEventListener('click', this.toggleTempuratureMode);
+
+    this._header.appendChild(this._tempModeBtn);
   }
 
   createForm() {
@@ -138,8 +164,7 @@ export default class WeatherAppManager {
   }
 
   displayWeatherData(isFavorite) {
-    this._currentWeatherData.temperatureMode =
-      ConversionUtility.temperatureModes.celsius;
+    this._currentWeatherData.temperatureMode = this._temperatureMode;
 
     const wCard = WeatherDom.createBasicCard(
       this._currentWeatherData,
@@ -205,5 +230,17 @@ export default class WeatherAppManager {
     } else {
       this.removeFavoriteCity(this._currentCity);
     }
+  }
+
+  toggleTempuratureMode(e) {
+    if (this._temperatureMode == ConversionUtility.temperatureModes.celsius) {
+      this._temperatureMode = ConversionUtility.temperatureModes.fahrenheit;
+      this._tempModeBtn.innerText = 'F';
+    } else {
+      this._temperatureMode = ConversionUtility.temperatureModes.celsius;
+      this._tempModeBtn.innerText = 'C';
+    }
+
+    this.reloadWeather();
   }
 }

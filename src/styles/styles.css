@@ -33,9 +33,12 @@ body {
   min-height: 5rem;
 }
 
-.title {
+.header__title {
   font-size: 3rem;
   margin: 1rem;
+}
+
+.header__temp-mode-button {
 }
 
 .search-form {
