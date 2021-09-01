@@ -37,6 +37,8 @@ export default class WeatherAppManager {
 
     if (this._favoriteCities.length >= 1) {
       this.loadWeather(this._favoriteCities[0], true);
+    } else {
+      this.loadWeather('Vancouver', false);
     }
   }
 
@@ -67,7 +69,7 @@ export default class WeatherAppManager {
       this.displayWeatherData(isFavorite);
       this._currentCity = cityName;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -219,11 +221,7 @@ export default class WeatherAppManager {
   }
 
   toggleFavorite(e) {
-    console.dir(e);
-
     const isFavorite = WeatherDom.toggleFavoriteIcon(e.target);
-
-    console.log(isFavorite);
 
     if (isFavorite) {
       this.addFavoriteCity(this._currentCity);
@@ -232,8 +230,8 @@ export default class WeatherAppManager {
     }
   }
 
-  toggleTempuratureMode(e) {
-    if (this._temperatureMode == ConversionUtility.temperatureModes.celsius) {
+  toggleTempuratureMode() {
+    if (this._temperatureMode === ConversionUtility.temperatureModes.celsius) {
       this._temperatureMode = ConversionUtility.temperatureModes.fahrenheit;
       this._tempModeBtn.innerText = 'F';
     } else {

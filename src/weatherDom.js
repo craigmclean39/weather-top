@@ -2,7 +2,6 @@
 import format from 'date-fns/format';
 import add from 'date-fns/add';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
-import WeatherDataObject from './weatherDataObject';
 import WeatherIcons from './weatherIcons';
 import DomHelper from './domHelper';
 import ConversionUtility from './conversionUtility';
@@ -461,7 +460,7 @@ export default class WeatherDom {
         }
         break;
       }
-      //cloudy
+      // cloudy
       case 801:
       case 802:
       case 803:
