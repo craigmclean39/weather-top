@@ -4,6 +4,8 @@ import WeatherFetcher from './weatherFetcher';
 import WeatherDom from './weatherDom';
 import LocalStorageHelper from './localStorageHelper';
 import SearchIcon from './icons/search.svg';
+import CelsiusIcon from './icons/celsius.svg';
+import FahrenheitIcon from './icons/fahrenheit.svg';
 
 export default class WeatherAppManager {
   constructor() {
@@ -86,7 +88,12 @@ export default class WeatherAppManager {
       'button',
       'header__temp-mode-button'
     );
-    this._tempModeBtn.innerText = 'C';
+    this._buttonImage = DomHelper.createElement(
+      'img',
+      'header__temp-mode-button__image'
+    );
+    this._tempModeBtn.appendChild(this._buttonImage);
+    this._buttonImage.src = CelsiusIcon;
 
     this._tempModeBtn.addEventListener('click', this.toggleTempuratureMode);
 
@@ -233,10 +240,10 @@ export default class WeatherAppManager {
   toggleTempuratureMode() {
     if (this._temperatureMode === ConversionUtility.temperatureModes.celsius) {
       this._temperatureMode = ConversionUtility.temperatureModes.fahrenheit;
-      this._tempModeBtn.innerText = 'F';
+      this._buttonImage.src = FahrenheitIcon;
     } else {
       this._temperatureMode = ConversionUtility.temperatureModes.celsius;
-      this._tempModeBtn.innerText = 'C';
+      this._buttonImage.src = CelsiusIcon;
     }
 
     this.reloadWeather();
