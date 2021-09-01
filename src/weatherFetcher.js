@@ -18,7 +18,7 @@ export default class WeatherFetcher {
   static async queryWeather(city) {
     try {
       // Grab the weather from the API with a city name
-      const fetchUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WeatherFetcher.apiKey}`;
+      const fetchUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${WeatherFetcher.apiKey}`;
       const response = await fetch(fetchUrl, { mode: 'cors' });
       const data = await response.json();
 
