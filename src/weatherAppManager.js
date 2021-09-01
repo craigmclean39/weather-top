@@ -128,7 +128,7 @@ export default class WeatherAppManager {
     this.input.type = 'text';
     this.input.placeholder = 'Enter City Name';
     this.submit.type = 'submit';
-    this.submit.innerText = 'Submit';
+    this.submit.innerText = 'Weather?';
 
     this.form.addEventListener('submit', this.doSearch);
   }
