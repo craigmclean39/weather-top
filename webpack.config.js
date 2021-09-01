@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -30,6 +31,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Weather',
     }),
+    new FaviconsWebpackPlugin('./src/icons/favicon.png'),
   ],
 
   output: {

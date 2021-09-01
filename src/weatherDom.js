@@ -1,3 +1,4 @@
+/* eslint-disable no-fallthrough */
 import format from 'date-fns/format';
 import add from 'date-fns/add';
 import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
@@ -173,7 +174,7 @@ export default class WeatherDom {
       'additional-info-card__pop__text'
     );
     popIcon.src = WeatherIcons.getPopIcon();
-    popText.innerText = `${wdo.currentPop * 100}%`;
+    popText.innerText = `${Math.round(wdo.currentPop * 100)}%`;
 
     pop.appendChild(popIcon);
     pop.appendChild(popText);
@@ -331,5 +332,155 @@ export default class WeatherDom {
       retVal = true;
     }
     return retVal;
+  }
+
+  static setBackground(element, wdo) {
+    // remove all previous gradient classes
+
+    for (let i = 0; i < element.classList.length; i++) {
+      const className = element.classList[i];
+      if (className.startsWith('weather-grid--gradient')) {
+        element.classList.remove(className);
+      }
+    }
+
+    const { isNight } = wdo;
+
+    switch (wdo.weatherId) {
+      // Thunderstorms
+      case 200:
+      case 201:
+      case 202:
+      case 210:
+      case 211:
+      case 212:
+      case 221:
+      case 230:
+      case 231:
+      case 232: {
+        // returnIcon = StormHero;
+        break;
+      }
+      // Drizzle
+      case 300:
+      case 301:
+      case 302:
+      case 310:
+      case 311:
+      case 312:
+      case 313:
+      case 321: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--rainy--night');
+        } else {
+          element.classList.add('weather-grid--gradient--rainy');
+        }
+        break;
+      }
+
+      // raining
+      case 500:
+      case 501:
+      case 502:
+      case 503:
+      case 504:
+      case 511:
+      case 520:
+      case 521:
+      case 522:
+      case 531: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--rainy--night');
+        } else {
+          element.classList.add('weather-grid--gradient--rainy');
+        }
+
+        break;
+      }
+      case 611: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--rainy--night');
+        } else {
+          element.classList.add('weather-grid--gradient--rainy');
+        }
+        break;
+      }
+      case 615:
+      case 616:
+      case 620: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--rainy--night');
+        } else {
+          element.classList.add('weather-grid--gradient--rainy');
+        }
+        break;
+      }
+      case 600:
+      case 601:
+      case 602:
+      case 612:
+      case 613:
+      case 621:
+      case 622: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--snowing--night');
+        } else {
+          element.classList.add('weather-grid--gradient--snowing');
+        }
+        break;
+      }
+      // mist
+      case 701:
+      // smoke
+      case 711:
+      // haze
+      case 721:
+      // dust whirls
+      case 731:
+      // fog
+      case 741:
+      // sand
+      case 751:
+      // dust
+      case 761:
+      // volcanic ash
+      case 762:
+      // squall
+      case 771:
+      // tornado
+      case 781: {
+        // returnIcon = TornadoHero;
+        break;
+      }
+      // clear
+      case 800: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--clear--night');
+        } else {
+          element.classList.add('weather-grid--gradient--clear');
+        }
+        break;
+      }
+      //cloudy
+      case 801:
+      case 802:
+      case 803:
+      case 804: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--cloudy--night');
+        } else {
+          element.classList.add('weather-grid--gradient--cloudy');
+        }
+        break;
+      }
+      default: {
+        if (isNight) {
+          element.classList.add('weather-grid--gradient--cloudy--night');
+        } else {
+          element.classList.add('weather-grid--gradient--cloudy');
+        }
+        break;
+      }
+    }
   }
 }

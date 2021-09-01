@@ -1,3 +1,4 @@
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime';
 import ConversionUtility from './conversionUtility';
 
 export default class WeatherDataObject {
@@ -230,5 +231,20 @@ export default class WeatherDataObject {
 
   set timezone(value) {
     this._timezone = value;
+  }
+
+  get isNight() {
+    const currentDate = Date.now();
+    const zonedDate = utcToZonedTime(currentDate, this._timezone);
+    let sunriseTime = new Date(this._sunriseTime * 1000);
+    let sunsetTime = new Date(this._sunsetTime * 1000);
+
+    sunriseTime = utcToZonedTime(sunriseTime, this._timezone);
+    sunsetTime = utcToZonedTime(sunsetTime, this._timezone);
+
+    if (zonedDate < sunriseTime || zonedDate > sunsetTime) {
+      return true;
+    }
+    return false;
   }
 }

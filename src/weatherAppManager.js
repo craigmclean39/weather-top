@@ -59,6 +59,10 @@ export default class WeatherAppManager {
     this._header = this._content.appendChild(
       DomHelper.createElement('div', 'header')
     );
+
+    const title = DomHelper.createElement('h1', 'title');
+    title.innerText = 'gotWEATHER?';
+    this._header.appendChild(title);
   }
 
   createForm() {
@@ -149,6 +153,8 @@ export default class WeatherAppManager {
 
     const weeklyCard = WeatherDom.createWeeklyCard(this._currentWeatherData);
     this._weatherGrid.appendChild(weeklyCard);
+
+    WeatherDom.setBackground(this._weatherGrid, this._currentWeatherData);
   }
 
   clearWeather() {
@@ -159,7 +165,9 @@ export default class WeatherAppManager {
 
   addFavoriteCity(cityName) {
     if (!this._favoriteCities.includes(cityName)) {
-      this._favoriteCities.push(cityName);
+      const cityToPush = cityName.charAt(0).toUpperCase() + cityName.slice(1);
+
+      this._favoriteCities.push(cityToPush);
       this.localStorageHelper.clearItems('favoriteCities');
       this.localStorageHelper.saveItem('favoriteCities', this._favoriteCities);
       this.reloadFavorites();
